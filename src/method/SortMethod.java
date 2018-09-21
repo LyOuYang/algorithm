@@ -3,8 +3,41 @@ package method;
 import org.junit.Test;
 
 import java.util.Arrays;
+
 public class SortMethod {
-    int[] testArr = {1, 55, 23,12,43,34,5,4342,45,31,0,-1,33,45,644};
+    int[] testArr = {1, 1};
+
+    public static int[] quickSort(int[] srcList) {
+        int start = 0;
+        int end = srcList.length - 1;
+        quickSort(srcList, start, end);
+        return srcList;
+    }
+
+    private static void quickSort(int[] srcList, int start, int end) {
+        if (start>=end)
+            return;
+        int i = start;
+        int j = end;
+        int bashNumber = srcList[start];
+        while (i != j) {
+            //等于基元素需要跳过，不然会出现死循环
+            while (srcList[j] >= bashNumber&&i<j)
+                j--;
+            while (srcList[i] <= bashNumber&&i<j)
+                i++;
+            if (i<j){
+                int mid = srcList[j];
+                srcList[j] = srcList[i];
+                srcList[i] = mid;
+            }
+        }
+        srcList[start] = srcList[i];
+        srcList[i] = bashNumber;
+        quickSort(srcList,start,i-1);
+        quickSort(srcList,i+1,end);
+    }
+
 
     public static int[] selectSort(int[] srcList) {
         //给予交换标志
@@ -98,34 +131,37 @@ public class SortMethod {
     }
 
 
-        private static void combine(int[] srcList, int left, int median, int right){
-            int _left = left, _median = median+1, _right = right;
-            int start = 0;
-            int[] _srcList = new int[right-left+1];
-            while (_left <= median && _median <= right) {
-                if (srcList[_left] < srcList[_median]) {
-                    _srcList[start++] = srcList[_left++];
-                } else {
-                    _srcList[start++] = srcList[_median++];
-                }
-            }
-            while (_left <= median) {
+    private static void combine(int[] srcList, int left, int median, int right) {
+        int _left = left, _median = median + 1, _right = right;
+        int start = 0;
+        int[] _srcList = new int[right - left + 1];
+        while (_left <= median && _median <= right) {
+            if (srcList[_left] < srcList[_median]) {
                 _srcList[start++] = srcList[_left++];
-            }
-
-            while (_median <= right) {
+            } else {
                 _srcList[start++] = srcList[_median++];
             }
-            for (int i = 0;i<_srcList.length;i++){
-                srcList[i+left] = _srcList[i];
-            }
+        }
+        while (_left <= median) {
+            _srcList[start++] = srcList[_left++];
         }
 
+        while (_median <= right) {
+            _srcList[start++] = srcList[_median++];
+        }
+        for (int i = 0; i < _srcList.length; i++) {
+            srcList[i + left] = _srcList[i];
+        }
+    }
 
+    @Test
+    public void testQuickSort(){
+        System.out.println("quickSort："+Arrays.toString(quickSort(mergeSort(testArr))));
+    }
 
     @Test
     public void testMergeSort() {
-        System.out.println(" mergeSort："+Arrays.toString(mergeSort(testArr)));
+        System.out.println(" mergeSort：" + Arrays.toString(mergeSort(testArr)));
     }
 
     @Test
